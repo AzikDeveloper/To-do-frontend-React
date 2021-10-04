@@ -69,6 +69,26 @@ body{
   font-size: 15px;
   font-family: inherit;
 }
+
+.trash-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 15px;
+  cursor: pointer;
+}
+.trash-btn > label {
+  font-size: 10px;
+}
+.trash-brand-section {
+  display: flex;
+  align-items: flex-start;
+}
+
+.trash-btn:active {
+  transform: scale(0.85);
+}
+
 .register-redirect {
   margin-top: 20px;
   display: flex;
@@ -116,6 +136,10 @@ body{
 
 .task.reminder {
   border-left: 5px solid green;
+}
+
+.deleted-task-reminder {
+  border-left: 5px solid #ff0000;
 }
 
 .task h3 {
@@ -235,7 +259,6 @@ footer {
 
 .change-profile-form {
   margin-bottom: 20px;
-  border: 1px solid green;
   padding: 15px;
   border-radius: 3px;
 }

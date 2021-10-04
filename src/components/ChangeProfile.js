@@ -26,7 +26,7 @@ const ChangeProfile = ({ChangeP, goBack}) => {
             <form className='change-profile-form' onSubmit={onSubmit}>
                 <div className='change-profile-bar'>
                     <h2>Change Account</h2>
-                    <Button text='Close' color='steelBlue' onClick={goBack}/> 
+                    <Button text='Back' color='steelBlue' onClick={goBack}/> 
                 </div>
                 
                 <br></br>

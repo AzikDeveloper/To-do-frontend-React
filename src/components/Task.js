@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
-import { FaTimes } from 'react-icons/fa'
+import { FaTimes, FaTrashRestoreAlt } from 'react-icons/fa'
 import { MdEdit } from 'react-icons/md'
 import { useState } from 'react'
 
-const Task = ({task, text_color, day_color, onDelete, onToggle, onUpdate}) => {
+const Task = ({task, text_color, day_color, onDelete, onToggle, onUpdate, deleted}) => {
     const [editTaskClicked, setEditTaskClicked] = useState(false)
     const [text, setText] = useState('')
     const [day, setDay] = useState('')
@@ -22,9 +22,8 @@ const Task = ({task, text_color, day_color, onDelete, onToggle, onUpdate}) => {
         const h = time.split(':')[0]
         const i = time.split(':')[1]
 
-        setFormattedDay(`${d}-${monthNames[parseInt(m)]} ${y}, ${h}:${i}`)
-        // setFormattedDay(`${date.getDay()}-${monthNames[date.getMonth()]}, ${date.getHours()} , ${date.getFullYear()}`)
-    })
+        setFormattedDay(`${d}-${monthNames[parseInt(m)-1]} ${y}, ${h}:${i}`)
+    }, [task.day])
     const editTask = () => {
         setEditTaskClicked(!editTaskClicked)
         setText(task.text)
@@ -52,8 +51,11 @@ const Task = ({task, text_color, day_color, onDelete, onToggle, onUpdate}) => {
             <h3 style={{color: text_color}} className='disable-select'>
                 {task.text}
                 <div className='edit-delete'>
-                    <MdEdit style={{marginRight: 15}} onClick={editTask} />
-                    <FaTimes color='red' onClick={()=>onDelete(task.id)} />
+                    {deleted ? 
+                        <FaTrashRestoreAlt onClick={()=>onUpdate({id: task.id, text: task.text, day: task.day, deleted:false}, 'restore')} style={{marginRight: 15}} color='steelBlue' /> : 
+                        <MdEdit style={{marginRight: 15}} onClick={editTask} />
+                    }
+                    <FaTimes color='red' onClick={deleted ? ()=>onDelete(task.id) : ()=>onUpdate({id: task.id, text: task.text, day: task.day, deleted:true}, 'delete')} />
                 </div>
             </h3>
             <p className='disable-select' style={{color: day_color}}>{formattedDay}</p>
@@ -81,11 +83,14 @@ const Task = ({task, text_color, day_color, onDelete, onToggle, onUpdate}) => {
             </div>
         </form>
     return (
-        <div className={`task ${task.reminder ? 'reminder' : ''}`} onDoubleClick={()=>onToggle(task.id)} >
-
-        {editTaskClicked ? changeTask : viewTask}
-
-        </div>
+        task.deleted ?  
+            <div className='task deleted-task-reminder'>
+                {editTaskClicked ? changeTask : viewTask}
+            </div> 
+                : 
+            <div className={`task ${task.reminder ? 'reminder' : ''}`} onDoubleClick={deleted ? ()=>{} : ()=>onToggle(task.id)} >
+                {editTaskClicked ? changeTask : viewTask}
+            </div>
     )
 }
 

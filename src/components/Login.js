@@ -1,47 +1,67 @@
 import { useState } from "react"
+import axiosInstance from '../components/axios_setup'
 
-const Login = ({logIn, Reg}) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+const Login = ({goToMain, goToRegister}) => {
+    const initialFormData = Object.freeze({
+        'username': '',
+        'password': ''
+    })
 
-    const onSubmit = (e) => {
+    const [formData, updateFormData] = useState(initialFormData)
+
+    const handleChange = (e)=> {
+        updateFormData({
+            ...formData,
+            [e.target.name]: e.target.value.trim(),
+        })
+    }
+
+    const handleSubmit = (e)=> {
         e.preventDefault()
-        if (!username) {
-            alert('Please enter username')
-            return
-        }
-        if (!password) {
-            alert('Please enter password')
-            return
-        }
-        logIn({username, password})
+        console.log('form-data: ', formData)
+        axiosInstance.post('api/token/',{
+            username: formData.username,
+            password: formData.password
+        }).then((res)=>{
+            localStorage.setItem('access_token', res.data.access)
+            localStorage.setItem('refresh_token', res.data.refresh)
+            axiosInstance.defaults.headers['Authorization'] = 
+            'JWT ' + localStorage.getItem('access_token')
+            console.log(res.data.access)
+            goToMain()
+
+        }).catch((error)=>{
+            console.log('on err', error)
+        })
     }
     return (
-        <form className='login-form' onSubmit={onSubmit}>
+        <form className='login-form' onSubmit={handleSubmit}>
             <h2>Log in</h2>
             <br></br>
             <div className='form-control'>
                 <label>Username</label>
                 <input
+                    name='username'
                     required=''
                     type='text' 
                     placeholder='enter username' 
-                    value={username} onChange={(e)=>setUsername(e.target.value)}
+                    onChange={handleChange}
                 />
             </div>
             <div className='form-control'>
                 <label>Password</label>
                 <input
+                    name='password'
                     required=''
                     type='password' 
                     placeholder='enter password'
-                    value={password} onChange={(e)=>setPassword(e.target.value)}
+                    onChange={handleChange}
                 />
             </div>
             
             <input className='btn btn-block' type='submit' value='Log in' />
             <div className='register-redirect'>
-                <p className='register-redirect-btn' onClick={Reg} >register</p>
+                <p className='register-redirect-btn' onClick={goToRegister} >register</p>
             </div>
         </form>
     )
