@@ -19,6 +19,7 @@ const Login = ({goToMain, goToRegister}) => {
     const handleSubmit = (e)=> {
         e.preventDefault()
         console.log('form-data: ', formData)
+        
         axiosInstance.post('api/token/',{
             username: formData.username,
             password: formData.password
@@ -34,6 +35,7 @@ const Login = ({goToMain, goToRegister}) => {
             console.log('on err', error)
         })
     }
+
     return (
         <form className='login-form' onSubmit={handleSubmit}>
             <h2>Log in</h2>
