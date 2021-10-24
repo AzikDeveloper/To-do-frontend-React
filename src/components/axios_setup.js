@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = 'https://test-hr-management.herokuapp.com/'
+const baseURL = 'https://azikdev-todo.herokuapp.com/'
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
